@@ -34,6 +34,8 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            docker stop nestjs-app || true
+            docker rm nestjs-app || true
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
             docker stop nestjs-app || true
             docker rm nestjs-app || true
