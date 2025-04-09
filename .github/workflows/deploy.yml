@@ -1,0 +1,40 @@
+name: Build and Deploy NestJS App
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Забираем код из репозитория
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Шаг 2: Логинимся в Docker Hub (для публикации образа)
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      # Шаг 3: Собираем и пушим Docker-образ
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
+
+      # Шаг 4: Подключаемся к серверу и деплоим
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
+            docker stop nestjs-app || true
+            docker rm nestjs-app || true
+            docker run -d --name nestjs-app -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
