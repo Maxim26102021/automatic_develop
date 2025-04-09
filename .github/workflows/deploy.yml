@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Забираем код из репозитория
+      # Шаг 1: Забираем код из репозитория.
       - name: Checkout code
         uses: actions/checkout@v4
 
