@@ -34,10 +34,10 @@ COPY --from=builder /app/package*.json ./
 
 # Указываем переменные окружения (опционально)
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=4000
 
 # Открываем порт (по умолчанию NestJS использует 3000)
-EXPOSE 3000
+EXPOSE 4000
 
 # Запускаем приложение
 CMD ["node", "dist/main.js"]
