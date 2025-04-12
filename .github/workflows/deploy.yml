@@ -37,4 +37,4 @@ jobs:
             docker stop nestjs-app || true
             docker rm nestjs-app || true
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
-            docker run -d --name nestjs-app -p 4000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
+            docker run -d --name nestjs-app -p 4000:4000 ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-app:latest
